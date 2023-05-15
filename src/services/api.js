@@ -16,12 +16,29 @@ export const registerUser = async (userData) => {
 };
 
 export const loginUser = async (credentials) => {
-	return await apiClient.post('/users/login', credentials);
+	try {
+		const response = await apiClient.post('/users/login', credentials);
+		if (response.data && response.data.token) {
+			localStorage.setItem('authToken', response.data.token);
+		}
+		return response.data;
+	} catch (error) {
+	  	throw error;
+	}
 };
+  
 
 // Task CRUD Operations
 export const getTasks = async (token) => {
 	return await apiClient.get('/tasks', {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+};
+
+export const getTask = async (token, taskId) => {
+	return await apiClient.get(`/tasks/${taskId}`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},

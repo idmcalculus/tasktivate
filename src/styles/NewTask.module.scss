@@ -1,0 +1,78 @@
+@import "./auth.scss";
+
+.taskContainer {
+	@extend .authContainer;
+    min-height: unset;
+  
+	.taskForm {
+		@extend .authForm;
+		max-width: unset;
+	
+		.formGroup {
+			@extend .formGroup;
+
+			& > div {
+				width: 60%;
+				margin: 0 auto;
+				margin-top: 2rem;
+			}
+
+			.formError {
+				@extend .formError;
+			}
+
+			.submitBtn {
+				@extend .submitBtn;
+				margin: 0 auto;
+				margin-top: 3rem;
+			}
+
+			.apiError {
+				@extend .apiError;
+
+				.dismissError {
+					@extend .dismissError;
+				}
+			}
+
+			.apiSuccess {
+				@extend .apiSuccess;
+
+				.dismissSuccess {
+					@extend .dismissSuccess;
+				}
+			}
+
+			textarea {
+				width: 100%;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				font-size: 1.5rem;
+				box-sizing: border-box;
+			}
+
+			select {
+				width: 100%;
+				padding: 1rem;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				font-size: 1.5rem;
+				box-sizing: border-box;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='black' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>") no-repeat;
+				background-position: right 0.5rem center;
+				background-size: 1rem;
+				padding-right: 2rem;
+
+				&:focus {
+					outline: none;
+					border-color: #2af598;
+				}
+			}
+		}
+	}
+}
+  

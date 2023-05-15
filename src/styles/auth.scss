@@ -1,4 +1,4 @@
-.auth-container {
+.authContainer {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,7 +7,7 @@
     font-family: Arial, sans-serif;
 	box-sizing: border-box;
 
-	.auth-form {
+	.authForm {
 		background-color: rgba(255, 255, 255, 0.8);
 		padding: 5rem;
 		border-radius: 10px;
@@ -21,7 +21,7 @@
 			font-weight: 700;
 		}
 
-		.form-group {
+		.formGroup {
 			margin: 2rem auto;
 
 			& > div {
@@ -50,14 +50,14 @@
 				}
 			}
 
-			.form-error {
+			.formError {
 				color: red;
 				font-size: 1rem;
 				margin-top: 0.25rem;
 			}
 
-			.submit-btn {
-				display: inline-block;
+			.submitBtn {
+				display: block;
 				background-color: #009efd;
 				color: white;
 				padding: 1rem 3rem;
@@ -78,7 +78,7 @@
 				}
 			}
 
-			.auth-link {
+			.authLink {
 				margin-top: 2rem;
 				font-size: 1.5rem;
 				text-align: center;
@@ -93,7 +93,7 @@
 				}
 			}
 
-			.api-error {
+			.apiError {
 				position: relative;
 				box-sizing: border-box;
 				width: 100%;
@@ -105,7 +105,7 @@
 				border-radius: 5px;
 				text-align: center;
 
-				.dismiss-error {
+				.dismissError {
 					position: absolute;
 					top: 0;
 					right: 0;
@@ -118,7 +118,7 @@
 				}
 			}
 
-			.api-success {
+			.apiSuccess {
 				box-sizing: border-box;
 				width: 100%;
 				background-color: #d4edda;
@@ -130,7 +130,7 @@
 				border-radius: 5px;
 				position: relative;
 
-				.dismiss-success {
+				.dismissSuccess {
 					position: absolute;
 					top: 0;
 					right: 0;

@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
 
-import { loginUser } from '../services/api';
-import '../styles/auth.scss';
-import ErrorMessage from './ErrorMessage';
-import SuccessMessage from './SuccessMessage';
+import { loginUser } from "../services/api";
+import { AuthContext } from "../AuthContext";
+import "../styles/auth.scss";
+import ErrorMessage from "./ErrorMessage";
+import SuccessMessage from "./SuccessMessage";
 
 const LoginSchema = Yup.object().shape({
-	email: Yup.string().email('Invalid email').required('Required'),
-	password: Yup.string().min(6, 'Too Short!').required('Required'),
+	email: Yup.string().email("Invalid email").required("Required"),
+	password: Yup.string().min(6, "Too Short!").required("Required"),
 });
 
 const LoginForm = () => {
 	const [apiError, setApiError] = useState(null);
 	const [apiSuccess, setApiSuccess] = useState(null);
+	const { login, setLoggedInUser } = useContext(AuthContext);
+	const navigate = useNavigate();
 
   	const formik = useFormik({
 		initialValues: { email: '', password: '' },
@@ -24,9 +27,12 @@ const LoginForm = () => {
 			try {
 				const response = await loginUser(values);
 				console.log(response);
-				setApiSuccess('Logged in successfully.');
+				setApiSuccess("Logged in successfully.");
+				setLoggedInUser(response);
+				login();
+				navigate("/tasks");
 			} catch (error) {
-				setApiError(error.response.data.message || 'Something went wrong. Please try again later');
+				setApiError(error.response.data.message || "Something went wrong. Please try again later");
 			} finally {
 				setSubmitting(false);
 			}
@@ -42,7 +48,7 @@ const LoginForm = () => {
 	};
 
 	return (
-		<form onSubmit={formik.handleSubmit} className='form-group'>
+		<form onSubmit={formik.handleSubmit} className="formGroup">
 			{apiError && <ErrorMessage message={apiError} onDismiss={handleDismissError} />}
       		{apiSuccess && <SuccessMessage message={apiSuccess} onDismiss={handleDismissSuccess} />}
 
@@ -56,7 +62,7 @@ const LoginForm = () => {
 					value={formik.values.email}
 				/>
 				{formik.touched.email && formik.errors.email ? (
-					<div className='form-error'>{formik.errors.email}</div>
+					<div className="formError">{formik.errors.email}</div>
 				) : null}
 			</div>
 			<div>
@@ -69,10 +75,10 @@ const LoginForm = () => {
 					value={formik.values.password}
 				/>
 				{formik.touched.password && formik.errors.password ? (
-					<div className='form-error'>{formik.errors.password}</div>
+					<div className="formError">{formik.errors.password}</div>
 				) : null}
 			</div>
-			<button type="submit" disabled={formik.isSubmitting} className='submit-btn'>
+			<button type="submit" disabled={formik.isSubmitting} className="submitBtn">
 				Login
 			</button>
 			<div className="auth-link">
