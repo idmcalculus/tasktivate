@@ -30,16 +30,15 @@ const NewTask = (props) => {
 	useEffect(() => {
 		if (id && token) {
 			getTask(token, id)
-			.then(response => {
-				console.log({ response })
-				const { title, description, dueDate, priority, status, assignedTo, createdBy } = response;
-				formik.setValues({ title, description, dueDate, priority, status, assignedTo, createdBy });
-			})
-			.catch(error => {
-				console.error('Error fetching task:', error);
-			});
+				.then(response => {
+					const { title, description, dueDate, priority, status, assignedTo, createdBy } = response;
+					formik.setValues({ title, description, dueDate, priority, status, assignedTo, createdBy });
+				})
+				.catch(error => {
+					console.error('Error fetching task:', error);
+				});
 		}
-	});
+	}, [id, token]);
 
 	const formik = useFormik({
 		initialValues: {
