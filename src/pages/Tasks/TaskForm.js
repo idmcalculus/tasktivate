@@ -1,16 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import { AuthContext } from "../../AuthContext";
-import { createTask } from "../../services/api";
-import styles from "../../styles/NewTask.module.scss";
+import styles from "../../styles/TaskForm.module.scss";
 import ErrorMessage from "../../components/ErrorMessage";
 import SuccessMessage from "../../components/SuccessMessage";
-import { getTask } from "../../services/api";
+import { getTask, updateTask, createTask } from "../../services/api";
 
-const NewTaskSchema = Yup.object().shape({
+const TaskFormSchema = Yup.object().shape({
 	title: Yup.string().required("Required"),
 	description: Yup.string().notRequired(),
 	dueDate: Yup.date().required("Required"),
@@ -20,48 +19,79 @@ const NewTaskSchema = Yup.object().shape({
 	createdBy: Yup.string().notRequired(),
 });
 
-const NewTask = (props) => {
+const TaskForm = () => {
 	const [apiError, setApiError] = useState(null);
 	const [apiSuccess, setApiSuccess] = useState(null);
 	const { loggedInUser } = useContext(AuthContext);
 	const { id } = useParams();
-	const token = loggedInUser?.token;
+	const token = loggedInUser ? loggedInUser.token : null;
+	const user = loggedInUser ? loggedInUser.user : null;
+	const navigate = useNavigate();
+
+	const formatDate = date => new Date(date).toISOString().slice(0, 10);
+
 
 	useEffect(() => {
-		if (id && token) {
-			getTask(token, id)
-				.then(response => {
-					const { title, description, dueDate, priority, status, assignedTo, createdBy } = response;
+		if (!token) {
+			navigate('/login');
+		} else if (id && token) {
+			async function fetchTask() {
+				try {
+					const response =  await getTask(token, id);
+					const { title = "", description = "", priority = "", status = "", assignedTo = "" } = response.data;
+					const date = response.data.dueDate;
+					const dueDate = date ? formatDate(date) : null;
+					const createdBy = response.data.createdBy && `${response.data.createdBy.username} (${response.data.createdBy.email})`
 					formik.setValues({ title, description, dueDate, priority, status, assignedTo, createdBy });
-				})
-				.catch(error => {
-					console.error('Error fetching task:', error);
-				});
-		}
-	}, [id, token]);
+				} catch (error) {
+					setApiError(error.response.data.message || "There was an error fetching Tasks. Please try again later.");
+				}
+			}
 
+			fetchTask();
+		}
+	}, [id, token, navigate]);
+
+	const handleSubmit = async (values, { setSubmitting }) => {
+		try {
+			setSubmitting(true);
+
+			const formattedValues = { ...values };
+			
+			if (formattedValues.dueDate) {
+				const date = formattedValues.dueDate;
+				formattedValues.dueDate = formatDate(date);
+			}
+		
+			let response;
+			if (id) {
+				response = await updateTask(token, id, formattedValues);
+			} else {
+				response = await createTask(token, formattedValues);
+			}
+			console.log({ response });
+			
+			setApiSuccess(`Task ${id ? 'updated' : 'created'} successfully.`);
+			navigate('/tasks');
+		} catch (error) {
+			setApiError(error.response.data.message || "Something went wrong. Please try again later");
+		} finally {
+			setSubmitting(false);
+		}
+	};
+	
 	const formik = useFormik({
 		initialValues: {
 			title: "",
 			description: "",
-			dueDate: new Date(),
+			dueDate: formatDate(new Date()),
 			priority: "Low",
 			status: "Not Started",
 			assignedTo: "",
-			createdBy: `${loggedInUser?.user?.username} (${loggedInUser?.user?.email})`,
+			createdBy: `${user && user.username} (${user && user.email})`,
 		},
-		validationSchema: NewTaskSchema,
-		onSubmit: async (values, { setSubmitting }) => {
-			try {
-				const response = await createTask(token, values);
-				console.log(response);
-				setApiSuccess("Task created successfully.");
-			} catch (error) {
-				setApiError(error.response.data.message || "Something went wrong. Please try again later");
-			} finally {
-				setSubmitting(false);
-			}
-		},
+		validationSchema: TaskFormSchema,
+		onSubmit: handleSubmit,
 	});
 
 	const handleDismissError = () => {
@@ -75,7 +105,7 @@ const NewTask = (props) => {
 	return (
 		<div className={styles.taskContainer}>
 			<div className={styles.taskForm}>
-				<h2>Create a New Task</h2>
+				<h2>{id ? 'Update Task' : 'Create a New Task'}</h2>
 				<form onSubmit={formik.handleSubmit}  className={styles.formGroup}>
 					{apiError && <ErrorMessage message={apiError} onDismiss={handleDismissError} />}
 					{apiSuccess && <SuccessMessage message={apiSuccess} onDismiss={handleDismissSuccess} />}
@@ -172,14 +202,14 @@ const NewTask = (props) => {
 							type="text"
 							name="createdBy"
 							readOnly
-							value={`${loggedInUser?.user?.username} (${loggedInUser?.user?.email})`}
+							value={`${user && user.username} (${user && user.email})`}
 						/>
 						{formik.touched.createdBy && formik.errors.createdBy ? (
 							<div className={styles.formError}>{formik.errors.createdBy}</div>
 						) : null}
 					</div>
 					<button type="submit" disabled={formik.isSubmitting} className={styles.submitBtn}>
-						{props.editMode ? 'Update Task' : 'Create Task'}
+						{id ? 'Update' : 'Create Task'}
 					</button>
 				</form>
 			</div>
@@ -187,4 +217,4 @@ const NewTask = (props) => {
 	);
 };
 
-export default NewTask;
+export default TaskForm;

@@ -1,12 +1,31 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import styles from "../../styles/TaskTable.module.scss";
+import { AuthContext } from "../../AuthContext";
 
 const TaskTable = ({ tasks, onDeleteTask }) => {
+	const { isAuthenticated } = useContext(AuthContext);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (!isAuthenticated) {
+			navigate('/login');
+		}
+	}, [isAuthenticated, navigate]);
 
 	const handleDeleteTask = (taskId) => {
 		onDeleteTask(taskId);
+	};
+
+	const formatDate = (date) => {
+		const dateObj = new Date(date);
+		const formattedDate = dateObj.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		});
+		return formattedDate;
 	};
 
 	return (
@@ -24,18 +43,18 @@ const TaskTable = ({ tasks, onDeleteTask }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{tasks.map((task) => (
-						<tr key={task._id}>
+					{tasks.map(({ _id: id, dueDate, ...task }) => (
+						<tr key={id}>
 							<td>{task.title}</td>
-							<td>{task.dueDate}</td>
+							<td>{formatDate(dueDate)}</td>
 							<td>{task.priority}</td>
 							<td>{task.status}</td>
 							<td>{task.assignedTo}</td>
 							<td>{task.createdBy?.email}</td>
 							<td>
 								<div className={styles.actionButtons}>
-            						<Link to={`/newtask/${task._id}`} className="btn btn-primary">Edit</Link>
-									<button className={styles.delete} onClick={() => handleDeleteTask(task.id)}>Delete</button>
+            						<Link to={`/taskform/${id}`} className="btn btn-primary">Edit</Link>
+									<button className={styles.delete} onClick={() => handleDeleteTask(id)}>Delete</button>
 								</div>
 							</td>
 						</tr>

@@ -9,21 +9,21 @@ import styles from "../../styles/Tasks.module.scss";
 const Tasks = () => {
 	const { loggedInUser } = useContext(AuthContext);
 	const navigate = useNavigate();
+	const token = loggedInUser?.token;
 
 	useEffect(() => {
-		if (!loggedInUser?.token) {
+		if (!token) {
 			navigate('/login');
 		} else {
-			fetchTasks(loggedInUser?.token);
+			fetchTasks(token);
 		}
-	}, [loggedInUser?.token, navigate]);
+	}, [token, navigate]);
 
 	const [tasks, setTasks] = useState([]);
 
 	const fetchTasks = async (token) => {
 		try {
 			const response = await getTasks(token);
-			console.log({ response })
 			setTasks(response.data);
 		} catch (error) {
 			console.error(error);
@@ -31,9 +31,10 @@ const Tasks = () => {
 	};
 
 	const handleDeleteTask = async (taskId) => {
+		console.log({ taskId, token, tasks })
 		try {
-			await deleteTask(taskId);
-			const updatedTasks = tasks.filter((task) => task.id !== taskId);
+			await deleteTask(token, taskId);
+			const updatedTasks = tasks.filter((task) => task._id !== taskId);
 			setTasks(updatedTasks);
 		} catch (error) {
 			console.error(error);
@@ -43,7 +44,7 @@ const Tasks = () => {
 	return (
 		<div className={styles.tasksContainer}>
 			<h1>Tasks</h1>
-			<Link to="/newtask" className="btn btn-primary">Create New Task</Link>
+			<Link to="/taskform" className="btn btn-primary">Create New Task</Link>
 			<div className={styles.taskTable}>
 				<TaskTable tasks={tasks} onDeleteTask={handleDeleteTask} />
 			</div>

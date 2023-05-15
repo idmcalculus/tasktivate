@@ -1,23 +1,23 @@
 // src/services/api.js
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = 'http://localhost:8008/v1';
+const API_BASE_URL = "http://localhost:8008/v1";
 
 const apiClient = axios.create({
 	baseURL: API_BASE_URL,
 	headers: {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 	},
 });
 
 // User Authentication
 export const registerUser = async (userData) => {
-	return await apiClient.post('/users/register', userData);
+	return await apiClient.post("/users/register", userData);
 };
 
 export const loginUser = async (credentials) => {
 	try {
-		const response = await apiClient.post('/users/login', credentials);
+		const response = await apiClient.post("/users/login", credentials);
 		if (response.data && response.data.token) {
 			localStorage.setItem('authToken', response.data.token);
 		}
@@ -30,7 +30,7 @@ export const loginUser = async (credentials) => {
 
 // Task CRUD Operations
 export const getTasks = async (token) => {
-	return await apiClient.get('/tasks', {
+	return await apiClient.get("/tasks", {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
