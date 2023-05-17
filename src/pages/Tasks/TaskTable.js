@@ -1,8 +1,7 @@
-import React, { useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import styles from "../../styles/TaskTable.module.scss";
 import { AuthContext } from "../../AuthContext";
+import styles from "../../styles/TaskTable.module.scss";
 
 const TaskTable = ({ tasks, onDeleteTask }) => {
 	const { isAuthenticated } = useContext(AuthContext);
@@ -45,16 +44,16 @@ const TaskTable = ({ tasks, onDeleteTask }) => {
 				<tbody>
 					{tasks.map(({ _id: id, dueDate, ...task }) => (
 						<tr key={id}>
-							<td>{task.title}</td>
-							<td>{formatDate(dueDate)}</td>
-							<td>{task.priority}</td>
-							<td>{task.status}</td>
-							<td>{task.assignedTo}</td>
-							<td>{task.createdBy?.email}</td>
-							<td>
+							<td data-label="Title">{task.title}</td>
+							<td data-label="Due Date">{formatDate(dueDate)}</td>
+							<td data-label="Priority">{task.priority}</td>
+							<td data-label="Status">{task.status}</td>
+							<td data-label="Assigned To">{task.assignedTo && task.assignedTo.email}</td>
+							<td data-label="Created By">{task.createdBy.email}</td>
+							<td data-label="Actions">
 								<div className={styles.actionButtons}>
-            						<Link to={`/taskform/${id}`} className="btn btn-primary">Edit</Link>
-									<button className={styles.delete} onClick={() => handleDeleteTask(id)}>Delete</button>
+									<Link to={`/taskform/${id}`} className={`${styles.btn} ${styles.btnPrimary}`}>Edit</Link>
+									<Link className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDeleteTask(id)}>Delete</Link>
 								</div>
 							</td>
 						</tr>
@@ -66,3 +65,4 @@ const TaskTable = ({ tasks, onDeleteTask }) => {
 };
 
 export default TaskTable;
+

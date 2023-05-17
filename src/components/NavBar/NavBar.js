@@ -28,7 +28,7 @@ const Navbar = () => {
 								</Link>
 							</li>
 							<li>
-								<button onClick={handleLogout} className={styles.navbarLink}>
+								<button onClick={handleLogout} className={`${styles.navbarLink} ${styles.btn}`}>
 									Logout
 								</button>
 							</li>

@@ -3,9 +3,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 
-import { loginUser } from "../services/api";
 import { AuthContext } from "../AuthContext";
-import "../styles/auth.scss";
+import styles from "../styles/Auth.module.scss";
 import ErrorMessage from "./ErrorMessage";
 import SuccessMessage from "./SuccessMessage";
 
@@ -17,7 +16,7 @@ const LoginSchema = Yup.object().shape({
 const LoginForm = () => {
 	const [apiError, setApiError] = useState(null);
 	const [apiSuccess, setApiSuccess] = useState(null);
-	const { login, setLoggedInUser } = useContext(AuthContext);
+	const { login } = useContext(AuthContext);
 	const navigate = useNavigate();
 
   	const formik = useFormik({
@@ -25,11 +24,8 @@ const LoginForm = () => {
 		validationSchema: LoginSchema,
 		onSubmit: async (values, { setSubmitting }) => {
 			try {
-				const response = await loginUser(values);
-				console.log(response);
+				await login(values);
 				setApiSuccess("Logged in successfully.");
-				setLoggedInUser(response);
-				login();
 				navigate("/tasks");
 			} catch (error) {
 				setApiError(error.response.data.message || "Something went wrong. Please try again later");
@@ -48,7 +44,7 @@ const LoginForm = () => {
 	};
 
 	return (
-		<form onSubmit={formik.handleSubmit} className="formGroup">
+		<form onSubmit={formik.handleSubmit} className={styles.formGroup}>
 			{apiError && <ErrorMessage message={apiError} onDismiss={handleDismissError} />}
       		{apiSuccess && <SuccessMessage message={apiSuccess} onDismiss={handleDismissSuccess} />}
 
@@ -62,7 +58,7 @@ const LoginForm = () => {
 					value={formik.values.email}
 				/>
 				{formik.touched.email && formik.errors.email ? (
-					<div className="formError">{formik.errors.email}</div>
+					<div className={styles.formError}>{formik.errors.email}</div>
 				) : null}
 			</div>
 			<div>
@@ -75,13 +71,13 @@ const LoginForm = () => {
 					value={formik.values.password}
 				/>
 				{formik.touched.password && formik.errors.password ? (
-					<div className="formError">{formik.errors.password}</div>
+					<div className={styles.formError}>{formik.errors.password}</div>
 				) : null}
 			</div>
-			<button type="submit" disabled={formik.isSubmitting} className="submitBtn">
+			<button type="submit" disabled={formik.isSubmitting} className={styles.submitBtn}>
 				Login
 			</button>
-			<div className="auth-link">
+			<div className={styles.authLink}>
 				<span>Don't have an account? </span>
 				<Link to="/register">Register</Link>
 			</div>

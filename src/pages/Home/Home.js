@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Home.scss';
+import styles from "../../styles/Home.module.scss";
 
 const Home = () => {
 	return (
-		<div className="home">
+		<div className={styles.home}>
 			<h1>Welcome to Tasktivate!</h1>
-			<p className="description">
+			<p className={styles.description}>
 				Tasktivate is your one-stop solution for managing tasks efficiently and effectively. With Tasktivate, you can:
 			</p>
 			<ul>
@@ -19,7 +19,7 @@ const Home = () => {
 				<li>Enjoy real-time updates on tasks using WebSockets</li>
 			</ul>
 			<Link to="/register">
-				<button className="cta-button">Get Started</button>
+				<button className={`${styles.btn} ${styles.btnPrimary}`}>Get Started</button>
 			</Link>
 		</div>
 	);

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 import { registerUser } from "../services/api";
-import "../styles/auth.scss";
+import styles from "../styles/Auth.module.scss";
 import ErrorMessage from "./ErrorMessage";
 import SuccessMessage from "./SuccessMessage";
 
@@ -50,7 +50,7 @@ const RegisterForm = () => {
 	};
 
 	return (
-		<form onSubmit={formik.handleSubmit} className="formGroup">
+		<form onSubmit={formik.handleSubmit} className={styles.formGroup}>
 			{apiError && <ErrorMessage message={apiError} onDismiss={handleDismissError} />}
       		{apiSuccess && <SuccessMessage message={apiSuccess} onDismiss={handleDismissSuccess} />}
 
@@ -64,7 +64,7 @@ const RegisterForm = () => {
 					value={formik.values.username}
 				/>
 				{formik.touched.username && formik.errors.username ? (
-					<div className="formError">{formik.errors.username}</div>
+					<div className={styles.formError}>{formik.errors.username}</div>
 				) : null}
 			</div>
 			<div>
@@ -77,7 +77,7 @@ const RegisterForm = () => {
 					value={formik.values.email}
 				/>
 				{formik.touched.email && formik.errors.email ? (
-					<div className="formError">{formik.errors.email}</div>
+					<div className={styles.formError}>{formik.errors.email}</div>
 				) : null}
 			</div>
 			<div>
@@ -90,13 +90,13 @@ const RegisterForm = () => {
 					value={formik.values.password}
 				/>
 				{formik.touched.password && formik.errors.password ? (
-					<div className="formError">{formik.errors.password}</div>
+					<div className={styles.formError}>{formik.errors.password}</div>
 				) : null}
 			</div>
-			<button type="submit" disabled={formik.isSubmitting} className="submitBtn">
+			<button type="submit" disabled={formik.isSubmitting} className={styles.submitBtn}>
 				Register
 			</button>
-			<div className="auth-link">
+			<div className={styles.authLink}>
 				<span>Already have an account? </span>
 				<Link to="/login">Login</Link>
 			</div>

@@ -1,0 +1,24 @@
+$primaryColor: #009efd;
+$secondaryColor: #44df99;
+$dangerColor: #ff4757;
+$tableBorderColor: #ccc;
+$tableHeaderBg: #009efd;
+$tableRowBg: #eee;
+$tableRowColor: #333;
+$fontFamily: Arial, sans-serif;
+
+@mixin respond($max, $min: null) {
+	@if ($max != null and $min != null) {
+		@media screen and (min-width: #{$min}) and (max-width: #{$max}) {
+			@content;
+		}
+	} @else if ($max == null and $min != null) {
+		@media screen and (min-width: #{$min}) {
+			@content;
+		}
+	} @else {
+		@media screen and (max-width: #{$max}) {
+			@content;
+		}
+	}
+}

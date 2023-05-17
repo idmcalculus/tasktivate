@@ -2,12 +2,13 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import AsyncSelect from 'react-select/async';
 
 import { AuthContext } from "../../AuthContext";
 import styles from "../../styles/TaskForm.module.scss";
 import ErrorMessage from "../../components/ErrorMessage";
 import SuccessMessage from "../../components/SuccessMessage";
-import { getTask, updateTask, createTask } from "../../services/api";
+import { getTask, updateTask, createTask, getUsers } from "../../services/api";
 
 const TaskFormSchema = Yup.object().shape({
 	title: Yup.string().required("Required"),
@@ -22,26 +23,28 @@ const TaskFormSchema = Yup.object().shape({
 const TaskForm = () => {
 	const [apiError, setApiError] = useState(null);
 	const [apiSuccess, setApiSuccess] = useState(null);
-	const { loggedInUser } = useContext(AuthContext);
+	const { isAuthenticated, loggedInUser } = useContext(AuthContext);
 	const { id } = useParams();
-	const token = loggedInUser ? loggedInUser.token : null;
-	const user = loggedInUser ? loggedInUser.user : null;
+	const { token, email, username } = loggedInUser || { token: null, email: null, username: null };
 	const navigate = useNavigate();
 
 	const formatDate = date => new Date(date).toISOString().slice(0, 10);
 
-
 	useEffect(() => {
-		if (!token) {
+		if (!isAuthenticated) {
 			navigate('/login');
-		} else if (id && token) {
+		}
+		
+		if (id && token) {
 			async function fetchTask() {
 				try {
 					const response =  await getTask(token, id);
 					const { title = "", description = "", priority = "", status = "", assignedTo = "" } = response.data;
 					const date = response.data.dueDate;
 					const dueDate = date ? formatDate(date) : null;
-					const createdBy = response.data.createdBy && `${response.data.createdBy.username} (${response.data.createdBy.email})`
+					const createdByObj = response.data.createdBy;
+					const createdBy = createdByObj ? `${createdByObj.username} (${createdByObj.email})` : null;
+					console.log({ createdBy })
 					formik.setValues({ title, description, dueDate, priority, status, assignedTo, createdBy });
 				} catch (error) {
 					setApiError(error.response.data.message || "There was an error fetching Tasks. Please try again later.");
@@ -50,7 +53,7 @@ const TaskForm = () => {
 
 			fetchTask();
 		}
-	}, [id, token, navigate]);
+	}, [id, token, isAuthenticated, navigate]);
 
 	const handleSubmit = async (values, { setSubmitting }) => {
 		try {
@@ -62,6 +65,8 @@ const TaskForm = () => {
 				const date = formattedValues.dueDate;
 				formattedValues.dueDate = formatDate(date);
 			}
+
+			formattedValues.createdBy = loggedInUser.id;
 		
 			let response;
 			if (id) {
@@ -88,11 +93,66 @@ const TaskForm = () => {
 			priority: "Low",
 			status: "Not Started",
 			assignedTo: "",
-			createdBy: `${user && user.username} (${user && user.email})`,
+			createdBy: `${username} (${email})`,
 		},
 		validationSchema: TaskFormSchema,
 		onSubmit: handleSubmit,
 	});
+
+	const loadUserOptions = async (inputValue) => {
+		const response = await getUsers(inputValue);
+	  
+		return response.data.map(user => ({
+		  value: user._id,
+		  label: `${user.username} (${user.email})`
+		}));
+	};
+
+	const customStyles = {
+		control: (provided) => ({
+			...provided,
+			width: '100%',
+			padding: '1rem',
+			border: '1px solid #ccc',
+			borderRadius: '5px',
+			fontSize: '1.5rem',
+			boxSizing: 'border-box',
+			'&:hover': {
+				borderColor: '#2af598'
+			}
+		}),
+		option: (provided, state) => ({
+			...provided,
+			color: state.isSelected ? 'white' : 'black',
+			backgroundColor: state.isSelected ? '#007bff' : 'white',
+			'&:hover': {
+				backgroundColor: '#e9ecef'
+			}
+		}),
+		menu: (provided) => ({
+			...provided,
+			marginLeft: '1rem',
+			marginRight: '1rem'
+		}),
+		singleValue: (provided) => ({
+			...provided,
+			marginLeft: '0'
+		}),
+		input: (provided) => ({
+			...provided,
+			marginLeft: '0',
+			marginRight: '0'
+		}),
+		valueContainer: (provided) => ({
+			...provided,
+			justifyContent: 'left',
+		}),
+		Container: (provided) => ({
+			...provided,
+			marginLeft: '0',
+			marginRight: '0'
+		}),
+	};
 
 	const handleDismissError = () => {
 		setApiError(null);
@@ -123,7 +183,7 @@ const TaskForm = () => {
 							<div className={styles.formError}>{formik.errors.title}</div>
 						) : null}
 					</div>
-					<div className={styles.formGroup}>
+					<div>
 						<label htmlFor="description">Description:</label>
 						<textarea
 							name="description"
@@ -135,10 +195,10 @@ const TaskForm = () => {
 							<div className={styles.formError}>{formik.errors.description}</div>
 						) : null}
 					</div>
-					<div className={styles.formGroup}>
+					<div>
 						<label htmlFor="dueDate">Due Date:</label>
 						<input
-							type="date"
+							type="datetime-local"
 							name="dueDate"
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -149,7 +209,7 @@ const TaskForm = () => {
 							<div className={styles.formError}>{formik.errors.dueDate}</div>
 						) : null}
 					</div>
-					<div className={styles.formGroup}>
+					<div>
 						<label htmlFor="priority">Priority:</label>
 						<select
 							name="priority"
@@ -166,7 +226,7 @@ const TaskForm = () => {
 							<div className={styles.formError}>{formik.errors.priority}</div>
 						) : null}
 					</div>
-					<div className={styles.formGroup}>
+					<div>
 						<label htmlFor="status">Status:</label>
 						<select
 							name="status"
@@ -183,26 +243,27 @@ const TaskForm = () => {
 							<div className={styles.formError}>{formik.errors.status}</div>
 						) : null}
 					</div>
-					<div className={styles.formGroup}>
+					<div>
 						<label htmlFor="assignedTo">Assigned To:</label>
-						<input
-							type="text"
-							name="assignedTo"
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							value={formik.values.assignedTo}
+						<AsyncSelect 
+							cacheOptions
+							loadOptions={loadUserOptions}
+							defaultOptions
+							onChange={(option) => formik.setFieldValue('assignedTo', option ? option.value : '')}
+							onBlur={() => formik.setFieldTouched('assignedTo')}
+							styles={customStyles}
 						/>
 						{formik.touched.assignedTo && formik.errors.assignedTo ? (
 							<div className={styles.formError}>{formik.errors.assignedTo}</div>
 						) : null}
 					</div>
-					<div className={styles.formGroup}>
+					<div>
 						<label htmlFor="createdBy">Created By:</label>
 						<input
 							type="text"
 							name="createdBy"
 							readOnly
-							value={`${user && user.username} (${user && user.email})`}
+							value={formik.values.createdBy ? formik.values.createdBy : `${username} (${email})`}
 						/>
 						{formik.touched.createdBy && formik.errors.createdBy ? (
 							<div className={styles.formError}>{formik.errors.createdBy}</div>

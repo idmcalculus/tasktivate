@@ -1,7 +1,8 @@
-// src/services/api.js
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8008/v1";
+axios.defaults.withCredentials = true;
+
+const API_BASE_URL = "https://task-manager-api-puce.vercel.app/v1";
 
 const apiClient = axios.create({
 	baseURL: API_BASE_URL,
@@ -10,27 +11,54 @@ const apiClient = axios.create({
 	},
 });
 
+// Get Users
+export const getUsers = async (searchTerm) => {
+	try {
+		return await apiClient.get(`/users?query=${searchTerm}`);
+	} catch (error) {
+		throw error;
+	}
+};
+
 // User Authentication
 export const registerUser = async (userData) => {
-	return await apiClient.post("/users/register", userData);
+	try {
+		return await apiClient.post("/users/register", userData);
+	} catch (error) {
+		throw error;
+	}
 };
 
 export const loginUser = async (credentials) => {
 	try {
-		const response = await apiClient.post("/users/login", credentials);
-		if (response.data && response.data.token) {
-			localStorage.setItem('authToken', response.data.token);
-		}
-		return response.data;
+		return await apiClient.post("/users/login", credentials);
 	} catch (error) {
 	  	throw error;
 	}
 };
   
+export const sessionStatus = async () => {
+	try {
+		return await apiClient.get("/users/session-status");
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const logoutUser = async () => {
+	try {
+		return await apiClient.post("/users/logout");
+	} catch (error) {
+		throw error;
+	}
+};
 
 // Task CRUD Operations
-export const getTasks = async (token) => {
+export const getTasks = async (token, page, search, status, priority) => {
 	return await apiClient.get("/tasks", {
+		params: {
+			page, search, status, priority
+		},
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},

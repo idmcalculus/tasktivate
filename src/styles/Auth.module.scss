@@ -1,9 +1,11 @@
+@import "./variables";
+
 .authContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #2af598 0%, #009efd 100%);
+    background: linear-gradient(135deg, $secondaryColor 0%, $primaryColor 100%);
     font-family: Arial, sans-serif;
 	box-sizing: border-box;
 
@@ -14,11 +16,19 @@
 		max-width: 500px;
 		width: 100%;
 
+		@include respond(980px) {
+			padding: 2rem;
+		}
+
 		& > h2 {
 			text-align: center;
 			margin-bottom: 2rem;
 			font-size: 3rem;
 			font-weight: 700;
+
+			@include respond(980px) {
+				font-size: 2rem;
+			}
 		}
 
 		.formGroup {
@@ -34,6 +44,10 @@
 				margin-bottom: 0.5rem;
 				font-size: 2rem;
 				font-weight: 500;
+
+				@include respond(980px) {
+					font-size: 1.5rem;
+				}
 			}
 
 			input {
@@ -75,6 +89,10 @@
 				&:disabled {
 					background-color: #ccc;
 					cursor: not-allowed;
+				}
+
+				@include respond(980px) {
+					font-size: 1.5rem;
 				}
 			}
 
