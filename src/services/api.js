@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8008/v1"; /* "https://task-manager-api-puce.vercel.app/v1"; */
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 
+process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_LOCAL_API_URL;
 
 const apiClient = axios.create({
 	baseURL: API_BASE_URL,
