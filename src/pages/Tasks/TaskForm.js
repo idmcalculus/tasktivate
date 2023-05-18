@@ -18,6 +18,7 @@ const TaskFormSchema = Yup.object().shape({
 	status: Yup.string().oneOf(["Not Started", "In Progress", "Completed"], "Invalid status").required("Required"),
 	assignedTo: Yup.string().notRequired(),
 	createdBy: Yup.string().notRequired(),
+	attachment: Yup.mixed().required('A file is required'),
 });
 
 const TaskForm = () => {
@@ -28,7 +29,17 @@ const TaskForm = () => {
 	const { token, email, username } = loggedInUser || { token: null, email: null, username: null };
 	const navigate = useNavigate();
 
-	const formatDate = date => new Date(date).toISOString().slice(0, 10);
+	// format date to yyyy-MM-ddThh:mm
+	const formatDate = date => {
+		const dateObj = new Date(date);
+		const year = dateObj.getFullYear();
+		const month = dateObj.getMonth() + 1;
+		const day = dateObj.getDate();
+		const hours = dateObj.getHours();
+		const minutes = dateObj.getMinutes();
+		const formattedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}T${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
+		return formattedDate;
+	};
 
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -67,12 +78,26 @@ const TaskForm = () => {
 			}
 
 			formattedValues.createdBy = loggedInUser.id;
+
+			const { title, description, dueDate, priority, status, assignedTo, createdBy, attachment } = formattedValues;
+			const formData = new FormData();
+
+			formData.append("title", title);
+			formData.append("description", description);
+			formData.append("dueDate", dueDate);
+			formData.append("priority", priority);
+			formData.append("status", status);
+			formData.append("assignedTo", assignedTo);
+			formData.append("createdBy", createdBy);
+			if (attachment) {
+				formData.append("attachment", attachment);
+			}
 		
 			let response;
 			if (id) {
-				response = await updateTask(token, id, formattedValues);
+				response = await updateTask(token, id, formData);
 			} else {
-				response = await createTask(token, formattedValues);
+				response = await createTask(token, formData);
 			}
 			console.log({ response });
 			
@@ -94,6 +119,7 @@ const TaskForm = () => {
 			status: "Not Started",
 			assignedTo: "",
 			createdBy: `${username} (${email})`,
+			attachment: null,
 		},
 		validationSchema: TaskFormSchema,
 		onSubmit: handleSubmit,
@@ -267,6 +293,20 @@ const TaskForm = () => {
 						/>
 						{formik.touched.createdBy && formik.errors.createdBy ? (
 							<div className={styles.formError}>{formik.errors.createdBy}</div>
+						) : null}
+					</div>
+					<div>
+						<label htmlFor="attachment">Attachment:</label>
+						<input
+							type="file"
+							name="attachment"
+							onChange={(event) => {
+								formik.setFieldValue("attachment", event.currentTarget.files[0]);
+							}}
+							onBlur={formik.handleBlur}
+						/>
+						{formik.touched.attachment && formik.errors.attachment ? (
+							<div className={styles.formError}>{formik.errors.attachment}</div>
 						) : null}
 					</div>
 					<button type="submit" disabled={formik.isSubmitting} className={styles.submitBtn}>

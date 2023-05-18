@@ -1,20 +1,20 @@
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
-
-const API_BASE_URL = "https://task-manager-api-puce.vercel.app/v1";
+const API_BASE_URL = "http://localhost:8008/v1"; /* "https://task-manager-api-puce.vercel.app/v1"; */
 
 const apiClient = axios.create({
 	baseURL: API_BASE_URL,
 	headers: {
 		"Content-Type": "application/json",
-	},
+	}
 });
 
 // Get Users
 export const getUsers = async (searchTerm) => {
 	try {
-		return await apiClient.get(`/users?query=${searchTerm}`);
+		return await apiClient.get(`/users?query=${searchTerm}`, {
+			withCredentials: true,
+		});
 	} catch (error) {
 		throw error;
 	}
@@ -23,7 +23,9 @@ export const getUsers = async (searchTerm) => {
 // User Authentication
 export const registerUser = async (userData) => {
 	try {
-		return await apiClient.post("/users/register", userData);
+		return await apiClient.post("/users/register", userData, {
+			withCredentials: true,
+		});
 	} catch (error) {
 		throw error;
 	}
@@ -31,7 +33,9 @@ export const registerUser = async (userData) => {
 
 export const loginUser = async (credentials) => {
 	try {
-		return await apiClient.post("/users/login", credentials);
+		return await apiClient.post("/users/login", credentials, {
+			withCredentials: true,
+		});
 	} catch (error) {
 	  	throw error;
 	}
@@ -39,7 +43,9 @@ export const loginUser = async (credentials) => {
   
 export const sessionStatus = async () => {
 	try {
-		return await apiClient.get("/users/session-status");
+		return await apiClient.get("/users/session-status", {
+			withCredentials: true,
+		});
 	} catch (error) {
 		throw error;
 	}
@@ -47,7 +53,9 @@ export const sessionStatus = async () => {
 
 export const logoutUser = async () => {
 	try {
-		return await apiClient.post("/users/logout");
+		return await apiClient.post("/users/logout", {}, {
+			withCredentials: true,
+		});
 	} catch (error) {
 		throw error;
 	}
@@ -62,6 +70,7 @@ export const getTasks = async (token, page, search, status, priority) => {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
+		withCredentials: true
 	});
 };
 
@@ -70,22 +79,27 @@ export const getTask = async (token, taskId) => {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
+		withCredentials: true
 	});
 };
 
 export const createTask = async (token, taskData) => {
 	return await apiClient.post('/tasks', taskData, {
 		headers: {
+			'Content-Type': 'multipart/form-data',
 			Authorization: `Bearer ${token}`,
 		},
+		withCredentials: true
 	});
 };
 
 export const updateTask = async (token, taskId, updatedData) => {
 	return await apiClient.put(`/tasks/${taskId}`, updatedData, {
 		headers: {
+			'Content-Type': 'multipart/form-data',
 			Authorization: `Bearer ${token}`,
 		},
+		withCredentials: true
 	});
 };
 
@@ -94,5 +108,6 @@ export const deleteTask = async (token, taskId) => {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
+		withCredentials: true
 	});
 };

@@ -17,13 +17,14 @@ const TaskTable = ({ tasks, onDeleteTask }) => {
 		onDeleteTask(taskId);
 	};
 
-	const formatDate = (date) => {
+	const formatDate = date => {
 		const dateObj = new Date(date);
-		const formattedDate = dateObj.toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		});
+		const year = dateObj.getFullYear();
+		const month = dateObj.getMonth() + 1;
+		const day = dateObj.getDate();
+		const hours = dateObj.getHours();
+		const minutes = dateObj.getMinutes();
+		const formattedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}T${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
 		return formattedDate;
 	};
 
@@ -38,6 +39,7 @@ const TaskTable = ({ tasks, onDeleteTask }) => {
 						<th>Status</th>
 						<th>Assigned To</th>
 						<th>Created By</th>
+						<th>Attachment</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -50,6 +52,15 @@ const TaskTable = ({ tasks, onDeleteTask }) => {
 							<td data-label="Status">{task.status}</td>
 							<td data-label="Assigned To">{task.assignedTo && task.assignedTo.email}</td>
 							<td data-label="Created By">{task.createdBy.email}</td>
+							<td data-label="Attachment">
+								{task.attachment &&
+									<div className={styles.actionButtons}>
+										<a href={task.attachment} target="_blank" rel="noopener noreferrer" className={`${styles.btn} ${styles.btnPrimary}`}>
+											View
+										</a>
+									</div>
+								}
+							</td>
 							<td data-label="Actions">
 								<div className={styles.actionButtons}>
 									<Link to={`/taskform/${id}`} className={`${styles.btn} ${styles.btnPrimary}`}>Edit</Link>

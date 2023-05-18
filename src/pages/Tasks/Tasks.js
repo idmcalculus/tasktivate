@@ -104,11 +104,22 @@ const Tasks = () => {
 		);
 	};
 
+	const Pagination = ({ page, totalPages, setPage }) => {
+		return (
+			<div className={styles.pagination}>
+				<button onClick={() => setPage((prevPage) => prevPage - 1)} disabled={page === 1}>Previous</button>
+				<span>{page}</span>
+				<button onClick={() => setPage((prevPage) => prevPage + 1)} disabled={page === totalPages}>Next</button>
+			</div>
+		);
+	};
+
 	if (isLoading) {
 		return (
 			<div className={styles.tasksContainer}>
 				<DefaultTaskPage />
 				<Loading />
+				<Pagination page={page} totalPages={totalPages} setPage={setPage} />
 			</div>
 		)
 	}
@@ -118,6 +129,7 @@ const Tasks = () => {
 			<div className={styles.tasksContainer}>
 				<DefaultTaskPage />
 				<NoTasks />
+				<Pagination page={page} totalPages={totalPages} setPage={setPage} />
 			</div>
 		);
 	}
@@ -128,11 +140,7 @@ const Tasks = () => {
 			<div className={styles.taskTable}>
 				<TaskTable tasks={tasks} onDeleteTask={handleDeleteTask} />
 			</div>
-			<div className={styles.pagination}>
-				<button onClick={() => setPage((prevPage) => prevPage - 1)} disabled={page === 1}>Previous</button>
-				<span>{page}</span>
-				<button onClick={() => setPage((prevPage) => prevPage + 1)} disabled={page === totalPages}>Next</button>
-			</div>
+			<Pagination page={page} totalPages={totalPages} setPage={setPage} />
 		</div>
 	);
 };
