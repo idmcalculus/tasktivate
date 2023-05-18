@@ -78,6 +78,7 @@ const TaskForm = () => {
 			}
 
 			formattedValues.createdBy = loggedInUser.id;
+			formattedValues.assignedTo = formattedValues.assignedTo ? formattedValues.assignedTo._id : null;
 
 			const { title, description, dueDate, priority, status, assignedTo, createdBy, attachment } = formattedValues;
 			const formData = new FormData();

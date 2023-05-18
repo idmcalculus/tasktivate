@@ -77,10 +77,9 @@
 	
 				.actionButtons {
 					display: flex;
-					justify-content: space-around;
 	
 					@include respond(980px) {
-						  flex-direction: column;
+						flex-direction: column;
 						align-items: end;
 					}
 			
@@ -98,7 +97,7 @@
 							color: white;
 					
 							&:hover {
-								background-color: darken($primaryColor, 10%);
+								background-color: darken($primaryColor, 20%);
 							}
 						}
 					
@@ -107,13 +106,35 @@
 							color: white;
 					
 							&:hover {
-								background-color: darken($dangerColor, 10%);
+								background-color: darken($dangerColor, 20%);
 							}
 						}
-	
+
 						@include respond(980px) {
 							width: 50px;
 							margin-bottom: 0.5rem;
+						}
+ 					}
+
+					.icons {
+						cursor: pointer;
+						transition: color 0.3s ease;
+						padding: 1rem;
+
+						&.editIcon {
+							color: #009efd;
+						
+							&:hover {
+								color: darken(#009efd, 20%);
+							}
+						}
+
+						&.trashIcon {
+							color: #ff4757;
+						
+							&:hover {
+								color: darken(#ff4757, 20%);
+							}
 						}
 					}
 				}
