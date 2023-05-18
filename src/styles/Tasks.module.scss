@@ -1,13 +1,13 @@
 @import "../styles/variables";
 
 .tasksContainer {
-	font-family: Arial, sans-serif;
+	font-family: $fontFamily;
 	box-sizing: border-box;
 	padding: 1.5rem;
 	max-width: 1200px;
 	margin: 0 auto;
 
-	@include respond(768px) {
+	@include respond(980px) {
 		padding: 1rem;
 	}
 
@@ -42,25 +42,50 @@
 		justify-content: space-between;
 		align-items: center;
 		margin: 2.5rem 0 1rem;
+
+		@include respond(980px) {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.searchBar {
+			flex: 1;
+			margin-right: 1rem;
+			padding: 0.5rem;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 1rem;
+
+			@include respond(980px) {
+				margin-bottom: 1rem;
+				margin-right: 0;
+				width: 60%;
+			}
+
+			@include respond(576px) {
+				width: 90%;
+			}
+		}
+		
+		.filterDropdown {
+			flex: 1;
+			margin-right: 1rem;
+			padding: 0.5rem;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 1rem;
+
+			@include respond(980px) {
+				margin-bottom: 1rem;
+				margin-right: 0;
+				width: 60%;
+			}
+
+			@include respond(576px) {
+				width: 90%;
+			}
+		}
 	}
-	
-	.searchBar {
-		flex: 1;
-		margin-right: 1rem;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		font-size: 1rem;
-	}
-	
-	.filterDropdown {
-		flex: 1;
-		margin-right: 1rem;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		font-size: 1rem;
-	}	
 
 	.pagination {
 		display: flex;
