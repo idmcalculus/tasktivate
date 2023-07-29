@@ -1,16 +1,24 @@
 import axios from "axios";
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? 
+/* const API_BASE_URL = process.env.NODE_ENV === 'production' ? 
 process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_LOCAL_API_URL;
 
-console.log({ API_BASE_URL })
+console.log({ API_BASE_URL }) */
+
+axios.defaults.withCredentials = true;
 
 const apiClient = axios.create({
-	baseURL: API_BASE_URL,
+	baseURL: "/api/v1",
 	headers: {
-		"Content-Type": "application/json",
-	}
+		"Content-Type": "application/json"
+	},
+	withCredentials: true
 });
+
+apiClient.interceptors.response.use(
+	response => (response), 
+	error => (Promise.reject(error.response.data.err))
+);
 
 // Get Users
 export const getUsers = async (searchTerm) => {
@@ -36,9 +44,7 @@ export const registerUser = async (userData) => {
 
 export const loginUser = async (credentials) => {
 	try {
-		return await apiClient.post("/users/login", credentials, {
-			withCredentials: true,
-		});
+		return await apiClient.post("/users/login", credentials);
 	} catch (error) {
 	  	throw error;
 	}
@@ -46,9 +52,7 @@ export const loginUser = async (credentials) => {
   
 export const sessionStatus = async () => {
 	try {
-		return await apiClient.get("/users/session-status", {
-			withCredentials: true,
-		});
+		return await apiClient.get("/users/session-status");
 	} catch (error) {
 		throw error;
 	}
