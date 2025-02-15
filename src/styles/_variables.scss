@@ -1,24 +1,89 @@
-$primaryColor: #009efd;
-$secondaryColor: #44df99;
-$dangerColor: #ff4757;
+// Colors
+$primaryColor: #2563eb;
+$secondaryColor: #4f46e5;
+$accentColor: #06b6d4;
+$dangerColor: #ef4444;
+$successColor: #22c55e;
+$warningColor: #f59e0b;
+$textPrimary: #1f2937;
+$textSecondary: #4b5563;
+$backgroundColor: #f8fafc;
+$cardBackground: #ffffff;
+
 $tableBorderColor: #ccc;
 $tableHeaderBg: #009efd;
 $tableRowBg: #eee;
 $tableRowColor: #333;
 $fontFamily: Arial, sans-serif;
 
-@mixin respond($max, $min: null) {
-	@if ($max != null and $min != null) {
-		@media screen and (min-width: #{$min}) and (max-width: #{$max}) {
-			@content;
-		}
-	} @else if ($max == null and $min != null) {
-		@media screen and (min-width: #{$min}) {
-			@content;
-		}
-	} @else {
-		@media screen and (max-width: #{$max}) {
-			@content;
-		}
-	}
+// Gradients
+$primaryGradient: linear-gradient(135deg, $primaryColor, $secondaryColor);
+$accentGradient: linear-gradient(135deg, $accentColor, $primaryColor);
+
+// Shadows
+$shadowSm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadowMd: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadowLg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+// Typography
+$fontFamily: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$fontSizeBase: 1rem;
+$fontSizeLg: 1.125rem;
+$fontSizeXl: 1.25rem;
+$fontSize2xl: 1.5rem;
+$fontSize3xl: 1.875rem;
+$fontSize4xl: 2.25rem;
+
+// Spacing
+$spacingSm: 0.5rem;
+$spacingBase: 1rem;
+$spacingLg: 1.5rem;
+$spacingXl: 2rem;
+$spacing2xl: 2.5rem;
+$spacing3xl: 3rem;
+
+// Breakpoints
+$breakpointSm: 640px;
+$breakpointMd: 768px;
+$breakpointLg: 1024px;
+$breakpointXl: 1280px;
+
+// Mixins
+@mixin respond($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpointSm) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpointMd) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpointLg) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpointXl) { @content; }
+  }
+}
+
+@mixin flex($direction: row, $justify: flex-start, $align: stretch) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin button($bg-color: $primaryColor, $text-color: white) {
+  padding: $spacingBase $spacingXl;
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadowMd;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
 }

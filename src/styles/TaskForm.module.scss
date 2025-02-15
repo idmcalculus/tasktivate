@@ -1,5 +1,6 @@
-@import "./variables";
-@import "./Auth.module.scss";
+@use "sass:color";
+@use "./variables" as *;
+@forward "./Auth.module.scss";
 
 .taskContainer {
 	@extend .authContainer;

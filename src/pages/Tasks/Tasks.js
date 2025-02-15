@@ -47,7 +47,7 @@ const Tasks = () => {
 	const handleDeleteTask = async (taskId) => {
 		try {
 			await deleteTask(token, taskId);
-			const updatedTasks = tasks.filter((task) => task._id !== taskId);
+			const updatedTasks = tasks.filter((task) => task.id !== taskId);
 			setTasks(updatedTasks);
 		} catch (error) {
 			console.error(error);

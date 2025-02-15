@@ -1,4 +1,5 @@
-@import "../styles/variables";
+@use "sass:color";
+@use "../styles/variables" as *;
 
 .tasksContainer {
 	font-family: $fontFamily;
@@ -33,7 +34,7 @@
 		text-decoration: none;
 	
 		&:hover {
-		  	background-color: darken($primaryColor, 10%);
+		  	background-color: color.adjust($primaryColor, $lightness: -10%);
 		}
 	}
 

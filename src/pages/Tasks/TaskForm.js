@@ -64,7 +64,7 @@ const TaskForm = () => {
 
 			fetchTask();
 		}
-	}, [id, token, isAuthenticated, navigate]);
+	}, [id, token, isAuthenticated, navigate, formik]);
 
 	const handleSubmit = async (values, { setSubmitting }) => {
 		try {
@@ -78,7 +78,7 @@ const TaskForm = () => {
 			}
 
 			formattedValues.createdBy = loggedInUser.id;
-			formattedValues.assignedTo = formattedValues.assignedTo ? formattedValues.assignedTo._id : null;
+			formattedValues.assignedTo = formattedValues.assignedTo ? formattedValues.assignedTo.id : null;
 
 			const { title, description, dueDate, priority, status, assignedTo, createdBy, attachment } = formattedValues;
 			const formData = new FormData();
@@ -110,7 +110,8 @@ const TaskForm = () => {
 			setSubmitting(false);
 		}
 	};
-	
+
+	// Define formik after handleSubmit
 	const formik = useFormik({
 		initialValues: {
 			title: "",
@@ -130,7 +131,7 @@ const TaskForm = () => {
 		const response = await getUsers(inputValue);
 	  
 		return response.data.map(user => ({
-		  value: user._id,
+		  value: user.id,
 		  label: `${user.username} (${user.email})`
 		}));
 	};

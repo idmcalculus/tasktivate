@@ -1,58 +1,57 @@
-@import "../../styles/variables";
+@use '../../styles/variables' as *;
 
 .navbar {
-	background-color: $primaryColor;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
-	.navbarContainer {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 1rem;
+  .navbarContainer {
+    @include flex(row, space-between, center);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: $spacingBase $spacingXl;
 
-		.navbarLogo {
-			color: white;
-			font-size: 1.5rem;
-			font-weight: bold;
-			text-decoration: none;
-		}
+    .navbarLogo {
+      color: $textPrimary;
+      font-size: $fontSizeXl;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: $spacingSm;
 
-		.navbarLinks {
-			display: flex;
-			align-items: center;
-			list-style-type: none;
+      .icon {
+        color: $primaryColor;
+      }
+    }
 
-			.navbarLink {
-				color: white;
-				text-decoration: none;
-				margin-left: 2rem;
-				font-size: 1.2rem;
-				cursor: pointer;
-			
-				&:hover {
-					text-decoration: underline;
-				}
+    .navbarLinks {
+      @include flex(row, flex-end, center);
+      gap: $spacingLg;
+      list-style: none;
+      margin: 0;
+      padding: 0;
 
-				&.btn {
-					padding: 0.5rem 1rem;
-					border-radius: 5px;
-					border: none;
-					margin-right: 0.5rem;
-					cursor: pointer;
-					text-align: center;
-					text-decoration: none;
-					background-color: #ddd;
-					color: #333;
+      .navbarLink {
+        color: $textPrimary;
+        text-decoration: none;
+        font-size: $fontSizeBase;
+        font-weight: 500;
+        opacity: 0.9;
+        transition: opacity 0.2s ease;
 
-					&:hover {
-						background-color: $dangerColor;
-						color: white;
-					}
-				}
-			}
-		}
-	}
+        &:hover {
+          opacity: 1;
+        }
+
+        &.btn {
+          @include button($primaryColor);
+          padding: $spacingSm $spacingBase;
+        }
+      }
+    }
+  }
 }

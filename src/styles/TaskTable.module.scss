@@ -1,4 +1,5 @@
-@import "../styles/variables";
+@use "sass:color";
+@use "../styles/variables" as *;
 
 .taskTableContainer {
 	max-width: 1200px;
@@ -97,7 +98,7 @@
 							color: white;
 					
 							&:hover {
-								background-color: darken($primaryColor, 20%);
+								background-color: color.adjust($primaryColor, $lightness: -20%);
 							}
 						}
 					
@@ -106,7 +107,7 @@
 							color: white;
 					
 							&:hover {
-								background-color: darken($dangerColor, 20%);
+								background-color: color.adjust($dangerColor, $lightness: -20%);
 							}
 						}
 
@@ -125,7 +126,7 @@
 							color: #009efd;
 						
 							&:hover {
-								color: darken(#009efd, 20%);
+								color: color.adjust(#009efd, $lightness: -20%);
 							}
 						}
 
@@ -133,7 +134,7 @@
 							color: #ff4757;
 						
 							&:hover {
-								color: darken(#ff4757, 20%);
+								color: color.adjust(#ff4757, $lightness: -20%);
 							}
 						}
 					}

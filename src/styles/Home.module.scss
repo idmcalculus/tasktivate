@@ -1,73 +1,160 @@
-@import "./variables";
+@use 'variables' as *;
 
 .home {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 2rem;
-	height: 100vh;
-	color: rgb(49, 38, 38);
-    background: linear-gradient(135deg, $secondaryColor 0%, $primaryColor 100%);
-  
-	h1 {
-		font-size: 4rem;
-		margin-bottom: 1rem;
-		text-align: center;
+  min-height: 100vh;
+  @include flex(column, flex-start, center);
+  background: $primaryGradient;
+  color: $textPrimary;
+  position: relative;
+  overflow: hidden;
 
-		@include respond(980px) {
-			font-size: 2.5rem;
-		}
-	}
-  
-	.description {
-		max-width: 600px;
-		font-size: 2.5rem;
-		line-height: 1.5;
-		text-align: center;
-		margin-bottom: 2rem;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=2560&q=80')
+      center/cover;
+    opacity: 0.05;
+    z-index: 0;
+  }
 
-		@include respond(980px) {
-			font-size: 2rem;
-		}
-	}
-  
-	ul {
-		list-style-type: disc;
-		padding-left: 1.5rem;
-		font-size: 2rem;
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: $spacing2xl;
+    position: relative;
+    z-index: 1;
+    
+    @include respond(md) {
+      padding: $spacing3xl;
+    }
+  }
 
-		@include respond(980px) {
-			font-size: 1.5rem;
-		}
-	
-		li {
-			margin-bottom: 1rem;
-		}
-	}
+  .hero {
+    text-align: center;
+    margin-bottom: $spacing3xl;
 
-	.btn {
-		padding: 1rem 2rem;
-		border-radius: 5px;
-		border: none;
-		margin-right: 0.5rem;
-		cursor: pointer;
-		text-align: center;
-		text-decoration: none;
-		font-size: 2rem;
-		font-weight: 600;
+    /* Changed h1, p color to mimic tailwind text-white/90 */
+    h1 {
+      font-size: $fontSize3xl;
+      font-weight: 800;
+      margin-bottom: $spacingLg;
+      color: #fff; /* override */
+      
+      @include respond(md) {
+        font-size: $fontSize4xl;
+      }
+    }
 
-		&.btnPrimary {
-			background-color: $primaryColor;
-			color: white;
-	
-			&:hover {
-				background-color: darken($primaryColor, 10%);
-			}
-		}
+    .description {
+      font-size: $fontSizeXl;
+      max-width: 600px;
+      margin: 0 auto $spacing2xl;
+      line-height: 1.5;
+      color: rgba(#fff, 0.9); /* override */
+    }
+  }
 
-		@include respond(980px) {
-			font-size: 1.5rem;
-		}
-	}
+  .features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacingLg;
+    margin-bottom: $spacing3xl;
+
+    @include respond(md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond(lg) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.1); /* changed for tailwind-like transparency */
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: $spacingXl;
+      transition: transform 0.3s ease, background-color 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      &:hover {
+        transform: translateY(-5px);
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+	  &:hover .icon {
+        transform: translateX(-10px);
+      }
+
+      .icon {
+        font-size: $fontSize2xl;
+        margin-bottom: $spacingBase;
+        color: #a1c3e3;
+  		transition: transform 0.3s ease, color 0.2s ease;
+      }
+
+      h3 {
+        font-size: $fontSizeLg;
+        margin-bottom: $spacingSm;
+        color: #fff; /* override for tailwind text-white */
+      }
+
+      p {
+        color: rgba(#fff, 0.8); /* override */
+        line-height: 1.6;
+      }
+    }
+  }
+
+  .cta {
+    text-align: center;
+	padding-bottom: $spacing3xl;
+
+    .button {
+      @include button($primaryColor);
+      font-size: $fontSizeLg;
+      padding: $spacingLg $spacing2xl;
+      
+      &:hover {
+        background: darken($primaryColor, 5%);
+      }
+    }
+  }
 }
-  
+
+/* Added fadeIn, slideUp, bounceSubtle animations */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.fadeIn {
+  animation: fadeIn 1s forwards;
+}
+
+.slideUp {
+  animation: slideUp 1s forwards;
+}
+
+.bounceSubtle {
+  animation: bounceSubtle 2s infinite;
+}

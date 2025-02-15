@@ -50,7 +50,7 @@ const TaskTable = ({ tasks, onDeleteTask }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{tasks.map(({ _id: id, dueDate, ...task }) => (
+					{tasks.map(({ id, dueDate, ...task }) => (
 						<tr key={id}>
 							<td data-label="Title">{task.title}</td>
 							<td data-label="Due Date">{formatDate(dueDate)}</td>
