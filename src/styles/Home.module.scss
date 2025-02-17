@@ -11,12 +11,8 @@
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=2560&q=80')
-      center/cover;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('https://via.placeholder.com/1920x1080?text=Background') center/cover; /* Placeholder background */
     opacity: 0.05;
     z-index: 0;
   }
@@ -27,7 +23,7 @@
     padding: $spacing2xl;
     position: relative;
     z-index: 1;
-    
+
     @include respond(md) {
       padding: $spacing3xl;
     }
@@ -37,13 +33,12 @@
     text-align: center;
     margin-bottom: $spacing3xl;
 
-    /* Changed h1, p color to mimic tailwind text-white/90 */
     h1 {
       font-size: $fontSize3xl;
       font-weight: 800;
       margin-bottom: $spacingLg;
-      color: #fff; /* override */
-      
+      color: #fff;
+
       @include respond(md) {
         font-size: $fontSize4xl;
       }
@@ -54,78 +49,221 @@
       max-width: 600px;
       margin: 0 auto $spacing2xl;
       line-height: 1.5;
-      color: rgba(#fff, 0.9); /* override */
-    }
-  }
-
-  .features {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: $spacingLg;
-    margin-bottom: $spacing3xl;
-
-    @include respond(md) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    @include respond(lg) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .feature {
-      background: rgba(255, 255, 255, 0.1); /* changed for tailwind-like transparency */
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      padding: $spacingXl;
-      transition: transform 0.3s ease, background-color 0.2s ease;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-
-      &:hover {
-        transform: translateY(-5px);
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-
-	  &:hover .icon {
-        transform: translateX(-10px);
-      }
-
-      .icon {
-        font-size: $fontSize2xl;
-        margin-bottom: $spacingBase;
-        color: #a1c3e3;
-  		transition: transform 0.3s ease, color 0.2s ease;
-      }
-
-      h3 {
-        font-size: $fontSizeLg;
-        margin-bottom: $spacingSm;
-        color: #fff; /* override for tailwind text-white */
-      }
-
-      p {
-        color: rgba(#fff, 0.8); /* override */
-        line-height: 1.6;
-      }
+      color: rgba(#fff, 0.9);
     }
   }
 
   .cta {
     text-align: center;
-	padding-bottom: $spacing3xl;
+    padding-bottom: $spacing3xl;
 
     .button {
       @include button($primaryColor);
       font-size: $fontSizeLg;
       padding: $spacingLg $spacing2xl;
-      
+
       &:hover {
         background: darken($primaryColor, 5%);
       }
     }
   }
+
+  /* Features Section */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: $spacing3xl;
+    margin-bottom: $spacing3xl;
+
+    .feature {
+      background: #2c3e50 center/cover no-repeat;
+      background-image: var(--bg-image);
+      background-blend-mode: multiply;
+      border-radius: 1rem;
+      min-height: 400px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.03);
+      }
+
+      .overlay {
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
+        width: 100%;
+        height: 100%;
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .icon {
+          font-size: $fontSize2xl;
+          margin-bottom: $spacingBase;
+          color: #a1c3e3;
+          transition: transform 0.3s ease, color 0.2s ease;
+
+          &:hover {
+            transform: scale(1.2);
+            color: #fff;
+          }
+        }
+
+        h3 {
+          font-size: $fontSizeLg;
+          margin-bottom: $spacingSm;
+          color: #fff;
+        }
+
+        p {
+          color: rgba(#fff, 0.8);
+          max-width: 80%;
+          line-height: 1.6;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+
+  /* Testimonials Section */
+  .testimonials {
+    text-align: center;
+    margin-bottom: $spacing3xl;
+    background: rgba(0, 0, 0, 0.7);
+    padding: $spacing2xl;
+    border-radius: 1rem;
+    box-shadow: $shadowMd;
+
+    div.slick-slider.slick-initialized {
+      ul.slick-dots.custom-dots {
+        li {
+          button {
+            &:before {
+              color: #fff !important;
+              font-size: 10px !important;
+              opacity: 0.6 !important;
+            }
+          }
+        }
+      }
+    }
+
+    h2 {
+      font-size: $fontSize2xl;
+      margin-bottom: $spacingLg;
+      color: #fff;
+    }
+
+    .testimonialCard {
+      background: #2c3e50;
+      padding: $spacingBase $spacingLg;
+      border-radius: 0.5rem;
+      text-align: center;
+
+      p {
+        font-size: $fontSizeBase;
+        margin-bottom: $spacingSm;
+        color: rgba(#fff, 0.9);
+      }
+
+      span {
+        font-size: $fontSizeSm;
+        color: rgba(#fff, 0.7);
+      }
+    }
+  }
+
+  /* Task Dashboard Preview */
+  .dashboardPreview {
+    margin-top: $spacing3xl;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: $spacing2xl;
+    border-radius: 1rem;
+    box-shadow: $shadowMd;
+
+    h2 {
+      font-size: $fontSize2xl;
+      margin-bottom: $spacingLg;
+      color: #fff;
+    }
+
+    .dashboard {
+      background:  #2c3e50;
+      padding: $spacing2xl;
+      border-radius: 1rem;
+      position: relative;
+
+      /* Styles for the placeholder image */
+      .dashboardImage {
+        width: 100%;
+        height: auto;
+        border-radius: 1rem;
+        object-fit: cover;
+        box-shadow: $shadowMd;
+      }
+    }
+  }
+
+  /* Footer Section */
+  .footer {
+    background: rgba(0, 0, 0, 0.8);
+    padding: $spacing2xl;
+    text-align: center;
+    border-top: none;
+
+    /* Ensure the footer spans the full width of the screen */
+    width: 100vw; /* Full viewport width */
+    margin-left: calc(-50vw + 50%); /* Center the footer */
+    position: relative;
+
+    .footerLinks {
+      margin-bottom: $spacingBase;
+
+      a {
+        margin: 0 $spacingBase;
+        color: #fff; /* White links for visibility */
+        text-decoration: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: $primaryColor; /* Highlight on hover */
+        }
+      }
+    }
+
+    .socialIcons {
+      margin-bottom: $spacingBase;
+
+      a {
+        margin: 0 $spacingBase;
+        color: #fff; /* White icons for visibility */
+        font-size: $fontSizeLg;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: $primaryColor; /* Highlight on hover */
+        }
+      }
+    }
+
+    p {
+      font-size: $fontSizeSm;
+      color: rgba(#fff, 0.7); /* Dimmed copyright text */
+    }
+  }
 }
 
-/* Added fadeIn, slideUp, bounceSubtle animations */
+/* Animations */
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
@@ -148,10 +286,12 @@
 }
 
 .fadeIn {
+  opacity: 0;
   animation: fadeIn 1s forwards;
 }
 
 .slideUp {
+  opacity: 0;
   animation: slideUp 1s forwards;
 }
 

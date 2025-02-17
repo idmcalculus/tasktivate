@@ -18,7 +18,7 @@ const TaskFormSchema = Yup.object().shape({
 	status: Yup.string().oneOf(["Not Started", "In Progress", "Completed"], "Invalid status").required("Required"),
 	assignedTo: Yup.string().notRequired(),
 	createdBy: Yup.string().notRequired(),
-	attachment: Yup.mixed().required('A file is required'),
+	attachment: Yup.mixed().notRequired(),
 });
 
 const TaskForm = () => {
@@ -40,31 +40,6 @@ const TaskForm = () => {
 		const formattedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}T${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
 		return formattedDate;
 	};
-
-	useEffect(() => {
-		if (!isAuthenticated) {
-			navigate('/login');
-		}
-		
-		if (id && token) {
-			async function fetchTask() {
-				try {
-					const response =  await getTask(token, id);
-					const { title = "", description = "", priority = "", status = "", assignedTo = "" } = response.data;
-					const date = response.data.dueDate;
-					const dueDate = date ? formatDate(date) : null;
-					const createdByObj = response.data.createdBy;
-					const createdBy = createdByObj ? `${createdByObj.username} (${createdByObj.email})` : null;
-					console.log({ createdBy })
-					formik.setValues({ title, description, dueDate, priority, status, assignedTo, createdBy });
-				} catch (error) {
-					setApiError(error.response.data.message || "There was an error fetching Tasks. Please try again later.");
-				}
-			}
-
-			fetchTask();
-		}
-	}, [id, token, isAuthenticated, navigate, formik]);
 
 	const handleSubmit = async (values, { setSubmitting }) => {
 		try {
@@ -126,6 +101,31 @@ const TaskForm = () => {
 		validationSchema: TaskFormSchema,
 		onSubmit: handleSubmit,
 	});
+
+	useEffect(() => {
+		if (!isAuthenticated) {
+			navigate('/login');
+		}
+		
+		if (id && token) {
+			async function fetchTask() {
+				try {
+					const response =  await getTask(token, id);
+					const { title = "", description = "", priority = "", status = "", assignedTo = "" } = response.data;
+					const date = response.data.dueDate;
+					const dueDate = date ? formatDate(date) : null;
+					const createdByObj = response.data.createdBy;
+					const createdBy = createdByObj ? `${createdByObj.username} (${createdByObj.email})` : null;
+					console.log({ createdBy })
+					formik.setValues({ title, description, dueDate, priority, status, assignedTo, createdBy });
+				} catch (error) {
+					setApiError(error.response.data.message || "There was an error fetching Tasks. Please try again later.");
+				}
+			}
+
+			fetchTask();
+		}
+	}, [id, token, isAuthenticated, navigate, formik]);
 
 	const loadUserOptions = async (inputValue) => {
 		const response = await getUsers(inputValue);

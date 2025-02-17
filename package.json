@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@icons-pack/react-simple-icons": "^11.2.0",
 		"autoprefixer": "^10.4.20",
 		"axios": "^1.7.9",
 		"downshift": "^9.0.8",
@@ -15,7 +16,9 @@
 		"react-responsive": "^10.0.0",
 		"react-scripts": "5.0.1",
 		"react-select": "^5.10.0",
+		"react-slick": "^0.30.3",
 		"sass": "^1.84.0",
+		"slick-carousel": "^1.8.1",
 		"web-vitals": "^4.2.4",
 		"yup": "^1.6.1"
 	},

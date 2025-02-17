@@ -9,7 +9,6 @@ $textPrimary: #1f2937;
 $textSecondary: #4b5563;
 $backgroundColor: #f8fafc;
 $cardBackground: #ffffff;
-
 $tableBorderColor: #ccc;
 $tableHeaderBg: #009efd;
 $tableRowBg: #eee;
@@ -28,6 +27,7 @@ $shadowLg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 // Typography
 $fontFamily: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 $fontSizeBase: 1rem;
+$fontSizeSm: 0.875rem;
 $fontSizeLg: 1.125rem;
 $fontSizeXl: 1.25rem;
 $fontSize2xl: 1.5rem;
@@ -77,12 +77,12 @@ $breakpointXl: 1280px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: $shadowMd;
   }
-  
+
   &:active {
     transform: translateY(0);
   }
