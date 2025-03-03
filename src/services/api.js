@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AuthContext } from "../AuthContext";
 
 /* const API_BASE_URL = process.env.NODE_ENV === 'production' ? 
 process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_LOCAL_API_URL;
@@ -6,6 +7,7 @@ process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_LOCAL_API_URL;
 console.log({ API_BASE_URL }) */
 
 axios.defaults.withCredentials = true;
+// const { token } = AuthContext();
 
 const apiClient = axios.create({
 	baseURL: "/api/v1",

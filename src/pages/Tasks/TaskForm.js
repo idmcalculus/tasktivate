@@ -46,7 +46,7 @@ const TaskForm = () => {
 			setSubmitting(true);
 
 			const formattedValues = { ...values };
-			
+
 			if (formattedValues.dueDate) {
 				const date = formattedValues.dueDate;
 				formattedValues.dueDate = formatDate(date);
@@ -66,6 +66,7 @@ const TaskForm = () => {
 			formData.append("assignedTo", assignedTo);
 			formData.append("createdBy", createdBy);
 			if (attachment) {
+				console.log(attachment);
 				formData.append("attachment", attachment);
 			}
 		
@@ -80,6 +81,7 @@ const TaskForm = () => {
 			setApiSuccess(`Task ${id ? 'updated' : 'created'} successfully.`);
 			navigate('/tasks');
 		} catch (error) {
+			console.error(error);
 			setApiError(error.response.data.message || "Something went wrong. Please try again later");
 		} finally {
 			setSubmitting(false);
@@ -94,7 +96,7 @@ const TaskForm = () => {
 			dueDate: formatDate(new Date()),
 			priority: "Low",
 			status: "Not Started",
-			assignedTo: "",
+			assignedTo: null,
 			createdBy: `${username} (${email})`,
 			attachment: null,
 		},
@@ -303,6 +305,7 @@ const TaskForm = () => {
 							type="file"
 							name="attachment"
 							onChange={(event) => {
+								console.log(event.currentTarget.files[0]);
 								formik.setFieldValue("attachment", event.currentTarget.files[0]);
 							}}
 							onBlur={formik.handleBlur}
