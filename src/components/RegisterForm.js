@@ -54,47 +54,60 @@ const RegisterForm = () => {
 			{apiError && <ErrorMessage message={apiError} onDismiss={handleDismissError} />}
       		{apiSuccess && <SuccessMessage message={apiSuccess} onDismiss={handleDismissSuccess} />}
 
-			<div>
-				<label htmlFor="username">Username:</label>
+			<div className={styles.formField}>
 				<input
 					id="username"
 					type="text"
+					name="username"
+					placeholder=" "
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					value={formik.values.username}
+					className={formik.touched.username && formik.errors.username ? styles.inputError : ''}
 				/>
+				<label htmlFor="username">Username</label>
 				{formik.touched.username && formik.errors.username ? (
 					<div className={styles.formError}>{formik.errors.username}</div>
 				) : null}
 			</div>
-			<div>
-				<label htmlFor="email">Email:</label>
+			<div className={styles.formField}>
 				<input
 					id="email"
 					type="email"
+					name="email"
+					placeholder=" "
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					value={formik.values.email}
+					className={formik.touched.email && formik.errors.email ? styles.inputError : ''}
 				/>
+				<label htmlFor="email">Email</label>
 				{formik.touched.email && formik.errors.email ? (
 					<div className={styles.formError}>{formik.errors.email}</div>
 				) : null}
 			</div>
-			<div>
-				<label htmlFor="password">Password:</label>
+			<div className={styles.formField}>
 				<input
 					id="password"
 					type="password"
+					name="password"
+					placeholder=" "
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					value={formik.values.password}
+					className={formik.touched.password && formik.errors.password ? styles.inputError : ''}
 				/>
+				<label htmlFor="password">Password</label>
 				{formik.touched.password && formik.errors.password ? (
 					<div className={styles.formError}>{formik.errors.password}</div>
 				) : null}
 			</div>
-			<button type="submit" disabled={formik.isSubmitting} className={styles.submitBtn}>
-				Register
+			<button 
+				type="submit" 
+				disabled={formik.isSubmitting} 
+				className={styles.submitBtn}
+			>
+				{formik.isSubmitting ? 'Registering...' : 'Register'}
 			</button>
 			<div className={styles.authLink}>
 				<span>Already have an account? </span>

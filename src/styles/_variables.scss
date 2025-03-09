@@ -1,18 +1,35 @@
-// Colors
+// Colors - Main Theme
 $primaryColor: #2563eb;
 $secondaryColor: #4f46e5;
 $accentColor: #06b6d4;
+
+// Colors - State
 $dangerColor: #ef4444;
 $successColor: #22c55e;
 $warningColor: #f59e0b;
+
+// Colors - Text
 $textPrimary: #1f2937;
 $textSecondary: #4b5563;
+$textMuted: #666666;
+
+// Colors - Background
 $backgroundColor: #f8fafc;
 $cardBackground: #ffffff;
+$inputBorderColor: #e0e0e0;
+$inputBorderFocusColor: $primaryColor;
+$inputBackgroundColor: transparent;
+
+// Colors - Table
 $tableBorderColor: #ccc;
 $tableHeaderBg: #009efd;
 $tableRowBg: #eee;
 $tableRowColor: #333;
+
+// Colors - Overlay
+$overlayLight: rgba(255, 255, 255, 0.95);
+$overlayShadow: rgba(0, 0, 0, 0.1);
+
 $fontFamily: Arial, sans-serif;
 
 // Gradients

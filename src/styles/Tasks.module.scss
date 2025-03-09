@@ -12,26 +12,25 @@
 		padding: 1rem;
 	}
 
-	h2 {
+	h1 {
 		text-align: center;
 		margin-bottom: 1rem;
-		font-size: 3rem;
+		font-size: 2.5rem;
 		font-weight: 700;
 		color: $primaryColor;
 	}
 
-	.newTask {
-		margin-bottom: 2rem;
-	}
-
 	.btnPrimary {
+		display: inline-block;
 		background-color: $primaryColor;
 		color: white;
-		padding: 1rem 2rem;
+		padding: 0.75rem 1.5rem;
 		border-radius: 5px;
 		border: none;
-		margin-bottom: 1rem;
+		margin-bottom: 1.5rem;
 		text-decoration: none;
+		font-size: 1rem;
+		transition: background-color 0.3s ease;
 	
 		&:hover {
 		  	background-color: color.adjust($primaryColor, $lightness: -10%);
@@ -42,73 +41,88 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin: 2.5rem 0 1rem;
+		margin-bottom: 2rem;
+		gap: 1rem;
 
 		@include respond(980px) {
 			flex-direction: column;
-			align-items: flex-start;
+			align-items: stretch;
 		}
 
-		.searchBar {
-			flex: 1;
-			margin-right: 1rem;
-			padding: 0.5rem;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-			font-size: 1rem;
+		.searchContainer {
+			display: flex;
+			flex: 2;
 
-			@include respond(980px) {
-				margin-bottom: 1rem;
-				margin-right: 0;
-				width: 600px;
+			.searchBar {
+				flex: 1;
+				padding: 0.5rem;
+				border: 1px solid #ccc;
+				border-radius: 5px 0 0 5px;
+				font-size: 1rem;
+				min-width: 0; // Prevent flex item from overflowing
 			}
 
-			@include respond(576px) {
-				width: max(90%, 300px);
+			.searchButton {
+				background-color: $primaryColor;
+				color: white;
+				border: none;
+				border-radius: 0 5px 5px 0;
+				padding: 0.5rem 1rem;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+
+				&:hover {
+					background-color: color.adjust($primaryColor, $lightness: -10%);
+				}
 			}
 		}
 		
 		.filterDropdown {
 			flex: 1;
-			margin-right: 1rem;
 			padding: 0.5rem;
 			border: 1px solid #ccc;
 			border-radius: 5px;
 			font-size: 1rem;
+			background-color: white;
+			cursor: pointer;
 
-			@include respond(980px) {
-				margin-bottom: 1rem;
-				margin-right: 0;
-				width: 600px;
-			}
-
-			@include respond(576px) {
-				width: max(90%, 300px);
+			&:focus {
+				outline: none;
+				border-color: $primaryColor;
 			}
 		}
 	}
 
-	.pagination {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1rem 0;
+	.taskTable {
+		margin-bottom: 1.5rem;
+	}
 
-		button {
-			padding: 0.6rem 1.6rem;
-			font-size: 16px;
-			font-weight: 600;
-			border: none;
-			background: $primaryColor;
-			color: #fff;
-			cursor: pointer;
-			border-radius: 5px;
-			transition: background 0.3s ease;
-		
-			&:disabled {
-				background: #ccc;
-				cursor: not-allowed;
-			}
+	.loadingMore {
+		text-align: center;
+		padding: 1rem 0;
+		font-size: 1rem;
+		color: $primaryColor;
+	}
+
+	.loadMoreButton {
+		display: block;
+		margin: 1rem auto;
+		padding: 0.75rem 1.5rem;
+		background-color: $primaryColor;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		font-size: 1rem;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+
+		&:hover:not(:disabled) {
+			background-color: color.adjust($primaryColor, $lightness: -10%);
+		}
+
+		&:disabled {
+			background-color: #ccc;
+			cursor: not-allowed;
 		}
 	}
 }

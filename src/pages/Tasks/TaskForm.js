@@ -16,7 +16,7 @@ const TaskFormSchema = Yup.object().shape({
 	dueDate: Yup.date().required("Required"),
 	priority: Yup.string().oneOf(["Low", "Medium", "High"], "Invalid priority").required("Required"),
 	status: Yup.string().oneOf(["Not Started", "In Progress", "Completed"], "Invalid status").required("Required"),
-	assignedTo: Yup.string().notRequired(),
+	assignedTo: Yup.mixed().nullable(),
 	createdBy: Yup.string().notRequired(),
 	attachment: Yup.mixed().notRequired(),
 });
@@ -53,7 +53,7 @@ const TaskForm = () => {
 			}
 
 			formattedValues.createdBy = loggedInUser.id;
-			formattedValues.assignedTo = formattedValues.assignedTo ? formattedValues.assignedTo.id : null;
+			formattedValues.assignedTo = formattedValues.assignedTo ? formattedValues.assignedTo : null;
 
 			const { title, description, dueDate, priority, status, assignedTo, createdBy, attachment } = formattedValues;
 			const formData = new FormData();
@@ -88,20 +88,15 @@ const TaskForm = () => {
 		}
 	};
 
-	// Define formik after handleSubmit
-	const formik = useFormik({
-		initialValues: {
-			title: "",
-			description: "",
-			dueDate: formatDate(new Date()),
-			priority: "Low",
-			status: "Not Started",
-			assignedTo: null,
-			createdBy: `${username} (${email})`,
-			attachment: null,
-		},
-		validationSchema: TaskFormSchema,
-		onSubmit: handleSubmit,
+	const [initialValues, setInitialValues] = useState({
+		title: "",
+		description: "",
+		dueDate: formatDate(new Date()),
+		priority: "Low",
+		status: "Not Started",
+		assignedTo: null,
+		createdBy: `${username} (${email})`,
+		attachment: null,
 	});
 
 	useEffect(() => {
@@ -112,14 +107,18 @@ const TaskForm = () => {
 		if (id && token) {
 			async function fetchTask() {
 				try {
-					const response =  await getTask(token, id);
-					const { title = "", description = "", priority = "", status = "", assignedTo = "" } = response.data;
+					const response = await getTask(token, id);
+					const { title = "", description = "", priority = "", status = "", assignedTo } = response.data;
 					const date = response.data.dueDate;
 					const dueDate = date ? formatDate(date) : null;
 					const createdByObj = response.data.createdBy;
 					const createdBy = createdByObj ? `${createdByObj.username} (${createdByObj.email})` : null;
-					console.log({ createdBy })
-					formik.setValues({ title, description, dueDate, priority, status, assignedTo, createdBy });
+					// Format assignedTo for AsyncSelect
+					const formattedAssignedTo = assignedTo ? {
+						value: assignedTo.id,
+						label: `${assignedTo.username} (${assignedTo.email})`
+					} : null;
+					setInitialValues({ title, description, dueDate, priority, status, assignedTo: formattedAssignedTo, createdBy });
 				} catch (error) {
 					setApiError(error.response.data.message || "There was an error fetching Tasks. Please try again later.");
 				}
@@ -127,7 +126,14 @@ const TaskForm = () => {
 
 			fetchTask();
 		}
-	}, [id, token, isAuthenticated, navigate, formik]);
+	}, [id, token, isAuthenticated, navigate]);
+
+	const formik = useFormik({
+		initialValues,
+		validationSchema: TaskFormSchema,
+		onSubmit: handleSubmit,
+		enableReinitialize: true,
+	});
 
 	const loadUserOptions = async (inputValue) => {
 		const response = await getUsers(inputValue);
@@ -279,7 +285,8 @@ const TaskForm = () => {
 							cacheOptions
 							loadOptions={loadUserOptions}
 							defaultOptions
-							onChange={(option) => formik.setFieldValue('assignedTo', option ? option.value : '')}
+							value={formik.values.assignedTo}
+					onChange={(option) => formik.setFieldValue('assignedTo', option)}
 							onBlur={() => formik.setFieldTouched('assignedTo')}
 							styles={customStyles}
 						/>

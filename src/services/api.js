@@ -1,5 +1,4 @@
 import axios from "axios";
-import { AuthContext } from "../AuthContext";
 
 /* const API_BASE_URL = process.env.NODE_ENV === 'production' ? 
 process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_LOCAL_API_URL;
@@ -7,7 +6,6 @@ process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_LOCAL_API_URL;
 console.log({ API_BASE_URL }) */
 
 axios.defaults.withCredentials = true;
-// const { token } = AuthContext();
 
 const apiClient = axios.create({
 	baseURL: "/api/v1",
@@ -72,9 +70,13 @@ export const logoutUser = async () => {
 
 // Task CRUD Operations
 export const getTasks = async (token, page, search, status, priority) => {
+	console.log('API getTasks called with:', { page, search, status, priority });
 	return await apiClient.get("/tasks", {
 		params: {
-			page, search, status, priority
+			page, 
+			search: search || '', // Ensure search is never undefined
+			status: status || '', 
+			priority: priority || ''
 		},
 		headers: {
 			Authorization: `Bearer ${token}`,

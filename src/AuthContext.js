@@ -1,53 +1,51 @@
-import React, { createContext, useState, useEffect } from "react";
-import { loginUser, logoutUser, sessionStatus } from "./services/api";
+import React, { createContext, useEffect } from "react";
+import { useSessionQuery, useLoginMutation, useLogoutMutation } from "./hooks/useAuth";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-	const [loggedInUser, setLoggedInUser] = useState(null);
-
-	const checkAuthStatus = async () => {
-		try {
-			const response = await sessionStatus();
-			setLoggedInUser(response.data);
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
+	// Use React Query to manage session state
+	const { data: loggedInUser, isLoading, error } = useSessionQuery();
+	
+	// Login mutation
+	const loginMutation = useLoginMutation();
+	
+	// Logout mutation
+	const logoutMutation = useLogoutMutation();
+	
+	// Log any errors
 	useEffect(() => {
-		const authStatus = async () => {
-			try {
-				await checkAuthStatus();
-			} catch (error) {
-				console.error(error);
-			}
+		if (error) {
+			console.error('Session error:', error);
 		}
-		authStatus();
-	}, []);
-
+	}, [error]);
+	
 	const login = async (credentials) => {
 		try {
-			await loginUser(credentials);
-			await checkAuthStatus();
+			await loginMutation.mutateAsync(credentials);
 		} catch (error) {
-			console.error(error);
+			console.error('Login error:', error);
+			throw error;
 		}
 	};
-
+	
 	const logout = async () => {
 		try {
-			await logoutUser();
-			setLoggedInUser(null);
+			await logoutMutation.mutateAsync();
 		} catch (error) {
-			console.error(error);
+			console.error('Logout error:', error);
+			throw error;
 		}
 	};
 
-	const isAuthenticated = !!loggedInUser;
-
 	return (
-		<AuthContext.Provider value={{ isAuthenticated, login, logout, loggedInUser }}>
+		<AuthContext.Provider value={{
+			isAuthenticated: !!loggedInUser,
+			loggedInUser,
+			isLoading,
+			login,
+			logout
+		}}>
 			{children}
 		</AuthContext.Provider>
 	);
